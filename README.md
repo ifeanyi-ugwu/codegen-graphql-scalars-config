@@ -4,7 +4,7 @@ This utility ensures that custom GraphQL scalar types are correctly inferred by 
 
 ## Installation
 
-After setting up graphql codegen, install this package:
+After setting up GraphQL Codegen, install this package:
 
 ```bash
 npm install codegen-graphql-scalars-config
@@ -12,7 +12,7 @@ npm install codegen-graphql-scalars-config
 
 ## Usage
 
-Use `createScalarConfiguration` to define scalar types and their imports. The `from` field is optional; by default, it pulls from `graphql-scalars`.
+Use `createScalarConfiguration` to define scalar types and their imports. The `from` field is optional; by default, it pulls from `graphql-scalars`. The `as` field is also optional; if not provided, it will default to `GraphQL{name}` (e.g., `GraphQLByte` for the scalar type `Byte`).
 
 Use the output from `createScalarConfiguration` in your GraphQL Codegen configuration to automatically import scalar types and define their mappings.
 
@@ -28,9 +28,9 @@ const scalarTypesPath = extractScalarTypeDefs({
 
 const scalarSetup = createScalarConfiguration([
   { name: "Byte", as: "GraphQLByte" },
-  { name: "CountryName", as: "GraphQLCountryName" },
-  { name: "Date", as: "GraphQLDate" },
-  { name: "Foo", as: "GraphQLFoo", from: "./custom-scalars" }, // Custom import NB: this path should be relative to the generated types path(i.e. "src/types/resolvers-types.generated.ts")
+  { name: "CountryName" },
+  { name: "Date" },
+  { name: "Foo", as: "GraphQLFoo", from: "./custom-scalars" }, // Custom import (NB: this path should be relative to the generated types path)
 ]);
 
 const config: CodegenConfig = {
@@ -56,7 +56,7 @@ const config: CodegenConfig = {
 export default config;
 ```
 
-Once you’ve set up your configuration, run the code generator and your correctly typed scalars will be included in the generated types:
+Once you’ve set up your configuration, run the code generator, and your correctly typed scalars will be included in the generated types:
 
 ```bash
 npx graphql-codegen
@@ -76,7 +76,7 @@ function createScalarConfiguration(
   - `imports`: An array of objects defining the custom scalar types.
     - `name`: The name of the scalar (e.g., `"Byte"`).
     - `from` (optional): The package where the scalar is imported from (defaults to `"graphql-scalars"`).
-    - `as`: The alias to import the scalar as (e.g., `"GraphQLByte"`).
+    - `as` (optional): The alias to import the scalar as (e.g., `"GraphQLByte"`). If not provided, it will default to `"GraphQL{name}"` (e.g., `"GraphQLByte"` for the scalar `Byte`).
 - **Returns**:
   - `imports`: An array of import statements for the scalars.
   - `scalarsConfig`: A mapping of scalar names to their respective input/output type definitions.
