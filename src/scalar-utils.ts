@@ -1,7 +1,7 @@
 type ScalarImport = {
   name: string;
   from?: string;
-  as: string;
+  as?: string;
 };
 
 interface ScalarConfigurationResult {
@@ -20,15 +20,20 @@ export function createScalarConfiguration(
 ): ScalarConfigurationResult {
   const importStatements = imports.map((imp) => {
     const fromSource = imp.from || "graphql-scalars";
-    return `import { ${imp.as} } from '${fromSource}';`;
+    const importName = imp.as || `GraphQL${imp.name}`;
+    return `import { ${importName} } from '${fromSource}';`;
   });
 
   const scalarsConfig = imports.reduce(
     (acc, imp) => ({
       ...acc,
       [imp.name]: {
-        input: `ReturnType<typeof ${imp.as}['parseValue']>`,
-        output: `ReturnType<typeof ${imp.as}['serialize']>`,
+        input: `ReturnType<typeof ${
+          imp.as || `GraphQL${imp.name}`
+        }[ 'parseValue']>`,
+        output: `ReturnType<typeof ${
+          imp.as || `GraphQL${imp.name}`
+        }[ 'serialize']>`,
       },
     }),
     {}
